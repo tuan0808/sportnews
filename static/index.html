@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sports News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0a0a0f;
+    --surface:  #111118;
+    --border:   #1e1e2e;
+    --accent:   #e8ff47;
+    --text:     #e8e8f0;
+    --muted:    #6b6b80;
+    --nfl:      #d62828;
+    --nba:      #1d6fa4;
+    --mlb:      #1a7a4a;
+    --nhl:      #4a5568;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+
+  .logo span { color: var(--text); }
+
+  /* ── League tabs ── */
+  .tabs {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .tab {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--muted);
+    transition: all 0.18s ease;
+  }
+
+  .tab:hover { color: var(--text); border-color: #333; }
+
+  .tab.active[data-league="nfl"] { background: var(--nfl); color: #fff; border-color: var(--nfl); }
+  .tab.active[data-league="nba"] { background: var(--nba); color: #fff; border-color: var(--nba); }
+  .tab.active[data-league="mlb"] { background: var(--mlb); color: #fff; border-color: var(--mlb); }
+  .tab.active[data-league="nhl"] { background: var(--nhl); color: #fff; border-color: var(--nhl); }
+
+  /* ── Main layout ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── News grid ── */
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* ── News card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: #2e2e3e;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: var(--border);
+  }
+
+  .card-image-placeholder {
+    width: 100%;
+    height: 180px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .card-body { padding: 1.1rem 1.25rem 1.25rem; }
+
+  .card-league-tag {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    margin-bottom: 0.65rem;
+    background: var(--border);
+    color: var(--muted);
+  }
+
+  .card[data-league="nfl"] .card-league-tag { background: rgba(214,40,40,0.15); color: #e05050; }
+  .card[data-league="nba"] .card-league-tag { background: rgba(29,111,164,0.15); color: #4da6e0; }
+  .card[data-league="mlb"] .card-league-tag { background: rgba(26,122,74,0.15); color: #40c07a; }
+  .card[data-league="nhl"] .card-league-tag { background: rgba(74,85,104,0.2); color: #8899aa; }
+
+  .card-headline {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.45;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .card-desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* ── States ── */
+  .state {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--muted);
+  }
+
+  .state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Card entrance animation ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card { animation: fadeUp 0.3s ease both; }
+
+  @media (max-width: 640px) {
+    header { padding: 1rem 1.25rem; flex-direction: column; gap: 1rem; }
+    .tabs { flex-wrap: wrap; justify-content: center; }
+    main  { padding: 1.5rem 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SPORTS<span>FEED</span></div>
+  <nav class="tabs">
+    <button class="tab active" data-league="nfl">NFL</button>
+    <button class="tab"        data-league="nba">NBA</button>
+    <button class="tab"        data-league="mlb">MLB</button>
+    <button class="tab"        data-league="nhl">NHL</button>
+  </nav>
+</header>
+
+<main>
+  <div class="section-title" id="section-title">NFL — Latest News</div>
+  <div id="news-container">
+    <div class="state"><div class="spinner"></div><p>Loading news…</p></div>
+  </div>
+</main>
+
+<script>
+  const API = '';  // empty = same origin (FastAPI serves this file)
+
+  let currentLeague = 'nfl';
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentLeague = tab.dataset.league;
+      loadNews(currentLeague);
+    });
+  });
+
+  // ── Fetch & render ────────────────────────────────────────────────────────
+  async function loadNews(league) {
+    const container = document.getElementById('news-container');
+    const title     = document.getElementById('section-title');
+
+    container.innerHTML = '<div class="state"><div class="spinner"></div><p>Loading news…</p></div>';
+    title.textContent   = `${league.toUpperCase()} — Latest News`;
+
+    try {
+      const res  = await fetch(`${API}/api/news?league=${league}&limit=50`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      if (!data.articles || data.articles.length === 0) {
+        container.innerHTML = '<div class="state"><div class="state-icon">📭</div><p>No articles found.</p></div>';
+        return;
+      }
+
+      container.innerHTML = '';
+      const grid = document.createElement('div');
+      grid.className = 'news-grid';
+
+      data.articles.forEach((article, i) => {
+        const card = document.createElement('a');
+        card.className   = 'card';
+        card.href        = article.url || '#';
+        card.target      = '_blank';
+        card.rel         = 'noopener noreferrer';
+        card.dataset.league = league;
+        card.style.animationDelay = `${i * 0.03}s`;
+
+        const imageHtml = article.imageUrl
+          ? `<img class="card-image" src="${escHtml(article.imageUrl)}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+            + `<div class="card-image-placeholder" style="display:none">${league.toUpperCase()}</div>`
+          : `<div class="card-image-placeholder">${league.toUpperCase()}</div>`;
+
+        const teams   = article.teams && article.teams.length ? article.teams.join(', ') : league.toUpperCase();
+        const pubDate = article.published ? formatDate(article.published) : '';
+        const author  = article.author ? `· ${escHtml(article.author)}` : '';
+
+        card.innerHTML = `
+          ${imageHtml}
+          <div class="card-body">
+            <div class="card-league-tag">${escHtml(teams)}</div>
+            <div class="card-headline">${escHtml(article.headline)}</div>
+            <div class="card-desc">${escHtml(article.description || '')}</div>
+            <div class="card-meta">
+              <span>${pubDate}</span>
+              <span>${author}</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      container.appendChild(grid);
+
+    } catch (err) {
+      container.innerHTML = `
+        <div class="state">
+          <div class="state-icon">⚠️</div>
+          <p>Failed to load news.<br><small>${err.message}</small></p>
+        </div>`;
+    }
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatDate(iso) {
+    try {
+      return new Date(iso).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    } catch { return ''; }
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────────────
+  loadNews('nfl');
+</script>
+
+</body>
+</html>
