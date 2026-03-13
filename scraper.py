@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 ESPN_BASE = "http://site.api.espn.com/apis/site/v2/sports"
 
 # Where to POST scraped data (your backend API)
-NEXT_URL     = "http://localhost:3000"   # ← change to your backend URL
+NEXT_URL     = "https://api.sharpedgy.com"   # ← change to your backend URL
 POST_HEADERS = {"Content-Type": "application/json"}
 
 # Local cache directory
@@ -28,6 +28,8 @@ LEAGUE_CONFIG = {
     "nba": "basketball/nba",
     "mlb": "baseball/mlb",
     "nhl": "hockey/nhl",
+    "ncaaf": "football/college-football",
+    "ncaab": "basketball/mens-college-basketball",
 }
 
 
@@ -119,7 +121,7 @@ def _post_json(endpoint: str, payload: dict) -> bool:
     """POST JSON payload to your backend API. Returns True on success."""
     url = f"{NEXT_URL}{endpoint}"
     try:
-        resp = requests.post(url, json=payload, headers=POST_HEADERS, timeout=10)
+        resp = requests.post(url, json=payload, headers=POST_HEADERS, timeout=30)
         resp.raise_for_status()
         return True
     except requests.exceptions.RequestException as e:

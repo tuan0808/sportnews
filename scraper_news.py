@@ -285,6 +285,6 @@ if __name__ == "__main__":
         COMMANDS[sys.argv[1]]()
     else:
         print("Usage: python3 scraper_news.py [league|teams|all]")
-        print("  league  — fetch news for each league (NFL, NBA, MLB, NHL)")
+        print("  league  — fetch news for each league (NFL, NBA, MLB, NHL, NCAAF, NCAAB)")
         print("  teams   — fetch news for every individual team")
         print("  all     — both of the above")
