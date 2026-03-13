@@ -43,7 +43,7 @@ def _espn_path(league: str) -> str:
 
 # ── HTTP fetch ────────────────────────────────────────────────────────────────
 
-def espn_fetch(url: str, retries: int = 3, timeout: int = 10) -> dict | None:
+def espn_fetch(url: str, retries: int = 3, timeout: int = 30) -> dict | None:
     """GET a URL and return parsed JSON, with retries."""
     for attempt in range(retries):
         try:
